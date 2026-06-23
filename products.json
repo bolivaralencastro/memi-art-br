@@ -1,0 +1,52 @@
+[
+  {
+    "id": "cafezinho-01",
+    "name": "Cafézinho",
+    "description": "Porque o dia só começa depois do primeiro gole. Vinil resistente à água.",
+    "price": 12.90,
+    "sizes": ["5x5cm", "8x8cm"],
+    "images": ["img/cafezinho.svg"],
+    "tags": ["brasil", "café", "cotidiano"],
+    "emoji": "☕"
+  },
+  {
+    "id": "tropical-02",
+    "name": "Tropical Vibes",
+    "description": "Sol, palmeira e aquela energia de verão o ano todo. Acabamento holográfico.",
+    "price": 15.90,
+    "sizes": ["5x7cm", "8x10cm"],
+    "images": ["img/tropical.svg"],
+    "tags": ["verão", "tropical", "holo"],
+    "emoji": "🌴"
+  },
+  {
+    "id": "arte-rua-03",
+    "name": "Arte de Rua",
+    "description": "Grafite, cores e identidade urbana. Vinílico com laminação UV.",
+    "price": 14.90,
+    "sizes": ["6x6cm", "9x9cm"],
+    "images": ["img/arte-rua.svg"],
+    "tags": ["urbano", "grafite", "arte"],
+    "emoji": "🎨"
+  },
+  {
+    "id": "natureza-04",
+    "name": "Natureza BR",
+    "description": "Fauna e flora do nosso país em sticker. Recortado no contorno.",
+    "price": 13.90,
+    "sizes": ["5x7cm", "8x10cm"],
+    "images": ["img/natureza.svg"],
+    "tags": ["natureza", "brasil", "fauna"],
+    "emoji": "🌿"
+  },
+  {
+    "id": "pixelado-05",
+    "name": "Pixelado",
+    "description": "Nostalgia em 8 bits. Para quem cresceu com joystick na mão.",
+    "price": 11.90,
+    "sizes": ["4x4cm", "7x7cm"],
+    "images": ["img/pixelado.svg"],
+    "tags": ["retro", "pixel", "games"],
+    "emoji": "👾"
+  }
+]

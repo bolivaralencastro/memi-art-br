@@ -3,9 +3,144 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>memi.art.br</title>
+  <title>memi — adesivos com personalidade</title>
+  <meta name="description" content="Adesivos de vinil com designs únicos, feitos para quem tem algo a dizer. Entrega em todo o Brasil.">
+  <meta property="og:title" content="memi — adesivos com personalidade">
+  <meta property="og:description" content="Adesivos de vinil com designs únicos. Entrega em todo o Brasil.">
+  <meta property="og:url" content="https://memi.art.br">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- GTM - substituir GTM-XXXXXXX pelo ID real após criar conta -->
+  <!-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXX');</script> -->
 </head>
 <body>
-  <h1>Hello World!</h1>
+  <!-- GTM noscript - substituir GTM-XXXXXXX pelo ID real -->
+  <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> -->
+
+  <header>
+    <a href="/" class="logo">me<span>mi</span></a>
+    <nav>
+      <a href="#catalogo">Adesivos</a>
+      <a href="#sobre">Sobre</a>
+    </nav>
+    <button id="cart-btn">
+      🛒 Carrinho <span id="cart-count">0</span>
+    </button>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg">🎨</div>
+    <h1>adesivos com<br><em>personalidade</em></h1>
+    <p>Designs únicos em vinil de qualidade. Do seu estilo para onde você quiser colar.</p>
+    <a href="#catalogo" class="hero-cta">Ver coleção →</a>
+  </section>
+
+  <div class="info-strip">
+    <div class="info-item">
+      <span class="info-icon">📦</span>
+      <div class="info-text">
+        <strong>Entrega em todo o Brasil</strong>
+        <span>Correios com código de rastreio</span>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">✂️</span>
+      <div class="info-text">
+        <strong>Recorte de precisão</strong>
+        <span>Vinil com acabamento profissional</span>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">💧</span>
+      <div class="info-text">
+        <strong>Resistente à água</strong>
+        <span>Dura anos sem desbotar</span>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">🔒</span>
+      <div class="info-text">
+        <strong>Pagamento seguro</strong>
+        <span>Via Mercado Pago</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="catalog" id="catalogo">
+    <h2>Coleção atual</h2>
+    <div class="product-grid" id="product-grid">
+      <!-- preenchido via products.json -->
+    </div>
+  </section>
+
+  <section class="about" id="sobre">
+    <h2>O que é memi?</h2>
+    <p>memi é um projeto de adesivos independente que acredita que objetos do cotidiano merecem mais personalidade. Cada design é pensado para quem quer expressar algo — sem precisar falar nada.</p>
+  </section>
+
+  <footer>
+    <a href="/" class="logo">me<span style="color:var(--accent)">mi</span></a>
+    <div class="social-links">
+      <a href="https://instagram.com/memi.art.br" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://facebook.com/memi.art.br" target="_blank" rel="noopener">Facebook</a>
+    </div>
+    <p class="footer-copy">© 2026 memi.art.br — Feito com carinho no Brasil 🇧🇷</p>
+  </footer>
+
+  <!-- CART SIDEBAR -->
+  <div id="cart-overlay"></div>
+  <aside id="cart-sidebar">
+    <div class="cart-header">
+      <h3>Seu carrinho</h3>
+      <button id="cart-close" title="Fechar">✕</button>
+    </div>
+    <div id="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cart-total-value">R$ 0,00</span>
+      </div>
+      <button id="checkout-btn" disabled>Finalizar pedido →</button>
+    </div>
+  </aside>
+
+  <div id="toast"></div>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+  <script src="cart.js"></script>
+  <script>
+    fetch('products.json')
+      .then(r => r.json())
+      .then(products => {
+        const grid = document.getElementById('product-grid');
+        grid.innerHTML = products.map(p => `
+          <div class="product-card" data-id="${p.id}">
+            <div class="product-thumb">${p.emoji}</div>
+            <div class="product-info">
+              <div class="product-name">${p.name}</div>
+              <div class="product-desc">${p.description}</div>
+              <div class="product-bottom">
+                <span class="product-price">R$&nbsp;${p.price.toFixed(2).replace('.', ',')}</span>
+                <select class="size-select" id="size-${p.id}">
+                  ${p.sizes.map(s => `<option value="${s}">${s}</option>`).join('')}
+                </select>
+              </div>
+              <button class="add-btn" onclick="addToCart(${JSON.stringify(p).replace(/"/g, '&quot;')}, document.getElementById('size-${p.id}').value)">
+                + Adicionar
+              </button>
+            </div>
+          </div>
+        `).join('');
+
+        products.forEach(p => {
+          dataLayer.push({ event: 'view_item', item_id: p.id, item_name: p.name, price: p.price });
+        });
+      });
+  </script>
 </body>
 </html>
