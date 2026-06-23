@@ -1,4 +1,5 @@
-const MP_PUBLIC_KEY = 'YOUR_MP_PUBLIC_KEY';
+// n8n webhook that creates the Mercado Pago preference server-side
+const CHECKOUT_ENDPOINT = 'https://n8n-production-7c86.up.railway.app/webhook/checkout';
 
 let cart = JSON.parse(localStorage.getItem('memi-cart') || '[]');
 
@@ -112,21 +113,11 @@ async function startCheckout() {
       unit_price: item.price
     }));
 
-    const res = await fetch('https://api.mercadopago.com/checkout/preferences', {
+    const res = await fetch(CHECKOUT_ENDPOINT, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${MP_PUBLIC_KEY}`
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         items,
-        back_urls: {
-          success: 'https://memi.art.br/obrigado.html',
-          failure: 'https://memi.art.br',
-          pending: 'https://memi.art.br/obrigado.html'
-        },
-        auto_return: 'approved',
-        statement_descriptor: 'MEMI ART',
         external_reference: `memi-${Date.now()}`
       })
     });
