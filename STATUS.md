@@ -1,6 +1,6 @@
 # memi.art.br — Status do Projeto
 
-> Última atualização: 2026-06-23 (sessão 2)
+> Última atualização: 2026-06-23 (sessão 3)
 
 ---
 
@@ -44,7 +44,10 @@
 - [x] **Workflow "MP Notificacao"** criado e ativo (ID: `s85OBgKauNdLIzks`):
   - Webhook: `POST /webhook/mp-notificacao` (resposta imediata 200 — MP não retry)
   - Node HTTP Request: busca detalhes do pagamento via `GET /v1/payments/{id}`
-  - Node IF: filtra `status == "approved"` (branch true → ações de pedido aprovado)
+  - Node IF: filtra `status == "approved"` (branch true → emails)
+  - Node "Email Confirmacao Cliente": POST Resend API → email HTML para `payer.email` com resumo do pedido
+  - Node "Email Grafica Novo Pedido": POST Resend API → email para `bolivar@alencastro.com.br` com dados do pedido
+- [x] **RESEND_API_KEY** configurada no Railway (domínio `memi.art.br` verificado na Resend)
 
 ### Teste ponta-a-ponta
 - [x] `curl POST /webhook/checkout` → retorna `init_point` válido do MP sandbox
@@ -69,18 +72,17 @@
 
 ### n8n — Workflows de Automação
 
-#### Workflow 1 — Novo pedido aprovado (base criada)
+#### Workflow 1 — Novo pedido aprovado (completo v1)
 - [x] Webhook `POST /webhook/mp-notificacao` recebe notificação do MP
 - [x] Busca detalhes do pagamento via API do MP
 - [x] Filtra `status == "approved"`
+- [x] **Email confirmação ao cliente** via Resend — HTML com nome, itens, total, link para loja
+- [x] **Email novo pedido para gráfica** via Resend → `bolivar@alencastro.com.br` (trocar pelo email da gráfica quando definida)
 - [ ] Registrar pedido no **Google Sheets** (planilha "Pedidos memi") — requer OAuth Google
-- [ ] Enviar email para gráfica — requer credencial Gmail
 
-#### Workflow 2 — Confirmação para cliente
-- [ ] Trigger: branch "true" do IF de aprovação
-- [ ] **Claude API** (`claude-haiku-4-5`) → gera mensagem personalizada com nome + itens comprados
-- [ ] Envia email de confirmação para o cliente via Gmail (OAuth)
-- **PRÓXIMO**: Configurar credencial Gmail OAuth no n8n
+#### Workflow 2 — Personalização com Claude (próxima fase)
+- [ ] **Claude API** (`claude-haiku-4-5`) → reescrever corpo do email com linguagem personalizada
+- [ ] Integrar como node entre IF e Email Confirmacao Cliente
 
 #### Workflow 3 — Conteúdo para Instagram (semanal)
 - [ ] Trigger: Cron toda segunda-feira às 9h
