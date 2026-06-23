@@ -1,6 +1,6 @@
 # memi.art.br — Status do Projeto
 
-> Última atualização: 2026-06-23 (sessão 3)
+> Última atualização: 2026-06-23 (sessão 4)
 
 ---
 
@@ -45,9 +45,11 @@
   - Webhook: `POST /webhook/mp-notificacao` (resposta imediata 200 — MP não retry)
   - Node HTTP Request: busca detalhes do pagamento via `GET /v1/payments/{id}`
   - Node IF: filtra `status == "approved"` (branch true → emails)
-  - Node "Email Confirmacao Cliente": POST Resend API → email HTML para `payer.email` com resumo do pedido
+  - Node "Mistral Personalizar Email": POST Mistral API (`mistral-small-latest`) → gera 2-3 frases personalizadas com nome + itens comprados
+  - Node "Email Confirmacao Cliente": POST Resend API → email HTML com texto personalizado do Mistral + resumo do pedido
   - Node "Email Grafica Novo Pedido": POST Resend API → email para `bolivar@alencastro.com.br` com dados do pedido
 - [x] **RESEND_API_KEY** configurada no Railway (domínio `memi.art.br` verificado na Resend)
+- [x] **MISTRAL_API_KEY** configurada no Railway (chave `memi-n8n`, tier gratuito Mistral)
 
 ### Teste ponta-a-ponta
 - [x] `curl POST /webhook/checkout` → retorna `init_point` válido do MP sandbox
@@ -80,9 +82,9 @@
 - [x] **Email novo pedido para gráfica** via Resend → `bolivar@alencastro.com.br` (trocar pelo email da gráfica quando definida)
 - [ ] Registrar pedido no **Google Sheets** (planilha "Pedidos memi") — requer OAuth Google
 
-#### Workflow 2 — Personalização com Claude (próxima fase)
-- [ ] **Claude API** (`claude-haiku-4-5`) → reescrever corpo do email com linguagem personalizada
-- [ ] Integrar como node entre IF e Email Confirmacao Cliente
+#### Workflow 2 — Personalização com Mistral (completo)
+- [x] **Mistral API** (`mistral-small-latest`) → gera mensagem personalizada em português com nome do cliente e itens
+- [x] Integrado como node entre IF "Aprovado" e "Email Confirmacao Cliente"
 
 #### Workflow 3 — Conteúdo para Instagram (semanal)
 - [ ] Trigger: Cron toda segunda-feira às 9h
