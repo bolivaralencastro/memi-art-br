@@ -1,6 +1,6 @@
 # memi.art.br — Status do Projeto
 
-> Última atualização: 2026-06-23
+> Última atualização: 2026-06-23 (sessão 2)
 
 ---
 
@@ -39,7 +39,12 @@
 - [x] **Workflow "Checkout MP"** criado e ativo:
   - Webhook: `POST /webhook/checkout`
   - Node HTTP Request: cria preferência no MP com o Access Token serverside
+  - Payload inclui `back_urls`, `auto_return`, `statement_descriptor`, `external_reference` e **`notification_url`** → `https://n8n-production-7c86.up.railway.app/webhook/mp-notificacao`
   - Responde com `{ init_point: "..." }` para o browser redirecionar
+- [x] **Workflow "MP Notificacao"** criado e ativo (ID: `s85OBgKauNdLIzks`):
+  - Webhook: `POST /webhook/mp-notificacao` (resposta imediata 200 — MP não retry)
+  - Node HTTP Request: busca detalhes do pagamento via `GET /v1/payments/{id}`
+  - Node IF: filtra `status == "approved"` (branch true → ações de pedido aprovado)
 
 ### Teste ponta-a-ponta
 - [x] `curl POST /webhook/checkout` → retorna `init_point` válido do MP sandbox
@@ -50,6 +55,7 @@
 ## O que falta fazer
 
 ### Meta Pixel (Fase 1 — Tracking)
+- [ ] **BLOQUEADO**: Login no Facebook requer WhatsApp 2FA (código não chega)
 - [ ] Criar conta no **Meta Business Manager** (business.facebook.com)
 - [ ] Criar **Pixel do Facebook/Instagram**
 - [ ] Adicionar pixel via GTM (nova tag HTML personalizado, trigger: All Pages)
@@ -63,15 +69,18 @@
 
 ### n8n — Workflows de Automação
 
-#### Workflow 1 — Novo pedido aprovado
-- [ ] Trigger: Webhook do MP (status `approved`)
-- [ ] Registrar pedido no **Google Sheets** (planilha "Pedidos memi")
-- [ ] Enviar email para gráfica com dados do pedido + arte + endereço de entrega
+#### Workflow 1 — Novo pedido aprovado (base criada)
+- [x] Webhook `POST /webhook/mp-notificacao` recebe notificação do MP
+- [x] Busca detalhes do pagamento via API do MP
+- [x] Filtra `status == "approved"`
+- [ ] Registrar pedido no **Google Sheets** (planilha "Pedidos memi") — requer OAuth Google
+- [ ] Enviar email para gráfica — requer credencial Gmail
 
 #### Workflow 2 — Confirmação para cliente
-- [ ] Trigger: pagamento aprovado
+- [ ] Trigger: branch "true" do IF de aprovação
 - [ ] **Claude API** (`claude-haiku-4-5`) → gera mensagem personalizada com nome + itens comprados
 - [ ] Envia email de confirmação para o cliente via Gmail (OAuth)
+- **PRÓXIMO**: Configurar credencial Gmail OAuth no n8n
 
 #### Workflow 3 — Conteúdo para Instagram (semanal)
 - [ ] Trigger: Cron toda segunda-feira às 9h
@@ -119,3 +128,4 @@
 | Railway Project | `a93edf18-b21c-4939-879f-776ceeb7736e` |
 | MP Sandbox Public Key | `APP_USR-a9d45349-5558-4061-9944-012445877eaf` |
 | Webhook checkout | `POST https://n8n-production-7c86.up.railway.app/webhook/checkout` |
+| Webhook notificação MP | `POST https://n8n-production-7c86.up.railway.app/webhook/mp-notificacao` |
